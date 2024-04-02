@@ -15,12 +15,12 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
     credentials: true,
-    // origin:
-    //   process.env.NODE_ENV === "production"
-    //     ? process.env.FRONTEND_URL
-    //     : process.env.FRONTEND_URL_LOCAL,
+    origin:
+      process.env.NODE_ENV === "production"
+        ? process.env.FRONTEND_URL
+        : process.env.FRONTEND_URL_LOCAL,
   })
 );
 app.use(express.json());
@@ -32,8 +32,8 @@ app.use(
 AssignmentsRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
-SecurityController(app);
 UserRoutes(app);
+SecurityController(app);
 Lab5(app);
 Hello(app);
 app.listen(process.env.PORT || 4000);
