@@ -16,11 +16,11 @@ const app = express();
 app.use(
   cors({
     // origin: "http://localhost:3000",
-    credentials: true,
     origin:
-      process.env.NODE_ENV === "production"
-        ? process.env.FRONTEND_URL
-        : process.env.FRONTEND_URL_LOCAL,
+    process.env.NODE_ENV === "production"
+      ? process.env.FRONTEND_URL
+      : process.env.FRONTEND_URL_LOCAL,
+    credentials: true,
   })
 );
 app.use(express.json());
