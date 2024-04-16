@@ -14,7 +14,6 @@ import mongoose from "mongoose";
 // require('dotenv').config();
 const app = express();
 
-// mongoose.connect("mongodb://localhost:27017/kanbas-sp24-mon");
 const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas-sp24-mon";
 mongoose.connect(CONNECTION_STRING);
 
@@ -40,11 +39,6 @@ if (process.env.NODE_ENV !== "development") {
     domain: process.env.HTTP_SERVER_DOMAIN,
   };
 }
-// app.use(
-//   session({
-//       secret: "keyboard cat",
-//   })
-// )
 
 app.use(session(sessionOptions));
 app.use(express.json());
