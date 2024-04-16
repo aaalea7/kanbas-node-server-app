@@ -21,12 +21,11 @@ app.use(
   cors({ 
     origin: [process.env.FRONTEND_URL, process.env.FRONTEND_URL_LOCAL],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'PATCH'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     optionsSuccessStatus: 200,
   })
 );
 const sessionOptions = {
-  // secret: "any string",
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
