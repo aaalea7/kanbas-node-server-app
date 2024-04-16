@@ -22,6 +22,7 @@ app.use(
   cors({ 
     origin: [process.env.FRONTEND_URL_LOCAL, process.env.FRONTEND_URL],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     optionsSuccessStatus: 200,
   })
 );
@@ -40,11 +41,6 @@ if (process.env.NODE_ENV !== "development") {
     domain: process.env.HTTP_SERVER_DOMAIN,
   };
 }
-// app.use(
-//   session({
-//       secret: "keyboard cat",
-//   })
-// )
 
 app.use(session(sessionOptions));
 app.use(express.json());
