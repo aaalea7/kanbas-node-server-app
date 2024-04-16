@@ -10,7 +10,6 @@ export default [
         description:
             "This course provides an in-depth study of the fundamentals of rocket propulsion, covering topics such as propulsion theory, engine types, fuel chemistry, and the practical applications of rocket technology. Designed for students with a strong background in physics and engineering, the course includes both theoretical instruction and hands-on laboratory work",
         image: "https://s3-us-west-2.amazonaws.com/courses-images/wp-content/uploads/sites/2952/2018/01/31193507/CNX_UPhysics_09_07_Shuttle.jpg"
-
     },
     {
         _id: "RS102",

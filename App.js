@@ -3,32 +3,51 @@ import session from "express-session";
 import express from "express";
 import Hello from "./Hello.js";
 import Lab5 from "./Lab5.js";
-import CourseRoutes from "./Kanbas/courses/routes.js";
+import CourseRoutes from "./Courses/routes.js";
 import ModuleRoutes from "./Kanbas/Modules/routes.js";
-import AssignmentsRoutes from "./Kanbas/Assignments/routes.js";
+import AssignmentsRoutes from "./Assignments/routes.js";
 import cors from "cors";
 import SecurityController from "./Kanbas/SecurityController.js";
-import UserRoutes from "./Kanbas/Users/routes.js";
-// require('dotenv').config();
+import UserRoutes from "./Users/routes.js";
+import mongoose from "mongoose";
 
+// require('dotenv').config();
 const app = express();
 
+// mongoose.connect("mongodb://localhost:27017/kanbas-sp24-mon");
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas-sp24-mon";
+mongoose.connect(CONNECTION_STRING);
+
 app.use(
-  cors({
-    // origin: "http://localhost:3000",
-    origin:
-    process.env.NODE_ENV === "production"
-      ? process.env.FRONTEND_URL
-      : process.env.FRONTEND_URL_LOCAL,
+  cors({ 
+    origin: [process.env.FRONTEND_URL_LOCAL, process.env.FRONTEND_URL],
     credentials: true,
   })
 );
+const sessionOptions = {
+  // secret: "any string",
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+};
+
+if (process.env.NODE_ENV !== "development") {
+  sessionOptions.proxy = true;
+  sessionOptions.cookie = {
+    sameSite: "none",
+    secure: true,
+    domain: process.env.HTTP_SERVER_DOMAIN,
+  };
+}
+// app.use(
+//   session({
+//       secret: "keyboard cat",
+//   })
+// )
+
+app.use(session(sessionOptions));
 app.use(express.json());
-app.use(
-    session({
-        secret: "keyboard cat",
-    })
-)
+
 AssignmentsRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
