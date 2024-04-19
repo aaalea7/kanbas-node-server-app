@@ -20,10 +20,14 @@ export default function UserRoutes(app) {
             console.error(err);
         }
     };
+    
     const updateUser = async (req, res) => {
         const { id } = req.params;
         try {
             const status = await dao.updateUser(id, req.body);
+            if (!status) {
+                return res.status(400).json({ message: "User not found" });
+            }
             const currentUser = await dao.findUserById(id);
             req.session["currentUser"] = currentUser;
             res.json(currentUser);
@@ -112,6 +116,7 @@ export default function UserRoutes(app) {
             // req.session.destroy();
             return res.status(401).json({ message: "User not authenticated" });
         }
+        console.log("Session user:", req.session["currentUser"]);
         res.json(currentUser);
     };
 

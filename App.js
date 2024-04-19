@@ -28,8 +28,7 @@ app.use(
 const sessionOptions = {
   secret: process.env.SESSION_SECRET,
   resave: false,
-  // saveUninitialized: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
 };
 
 if (process.env.NODE_ENV !== "development") {
@@ -37,6 +36,7 @@ if (process.env.NODE_ENV !== "development") {
   sessionOptions.cookie = {
     sameSite: "none",
     secure: true,
+    httpOnly: true,
     domain: process.env.HTTP_SERVER_DOMAIN,
   };
 }
