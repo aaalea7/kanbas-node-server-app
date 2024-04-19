@@ -89,11 +89,11 @@ export default function UserRoutes(app) {
                 console.log("Authentication failed for user:", username);
                 if (userExists) {
                     console.log("Incorrect password for user:", username);
-                    req.session.destroy();
+                    // req.session.destroy();
                     return res.status(401).json({ message: "Incorrect password" });
                 } else {
                     console.log("User not found:", username);
-                    req.session.destroy();
+                    // req.session.destroy();
                     return res.status(401).json({ message: "User not found" });
                 }
             }
@@ -106,10 +106,10 @@ export default function UserRoutes(app) {
         req.session.destroy();
         res.sendStatus(200);
     };
-    const profile = async (req, res) => {
+    const profile = async (req, res) => {    
         const currentUser = req.session["currentUser"];
         if (!currentUser) {
-            req.session.destroy();
+            // req.session.destroy();
             return res.status(401).json({ message: "User not authenticated" });
         }
         res.json(currentUser);
