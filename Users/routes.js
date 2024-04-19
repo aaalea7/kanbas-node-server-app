@@ -1,5 +1,6 @@
-import session from "express-session";
 import * as dao from "./dao.js";
+
+let globalCurrentUser;
 
 export default function UserRoutes(app) {
     const createUser = async (req, res) => {
@@ -20,7 +21,6 @@ export default function UserRoutes(app) {
             console.error(err);
         }
     };
-    
     const updateUser = async (req, res) => {
         const { id } = req.params;
         try {
@@ -54,7 +54,6 @@ export default function UserRoutes(app) {
         const user = await dao.findUserById(req.params.id);
         res.json(user);
     };
-
     const findUserByUsername = async (req, res) => {
         const username = req.params.username;
         const user = await dao.findUserByUsername(username);
@@ -72,6 +71,7 @@ export default function UserRoutes(app) {
             }
             const currentUser = await dao.createUser(req.body);
             req.session["currentUser"] = currentUser;
+            globalCurrentUser = currentUser;
             res.json(currentUser);
         } catch (error) {
             console.error("Sign up error:", error);
@@ -87,6 +87,7 @@ export default function UserRoutes(app) {
             const currentUser = await dao.findUserByCredentials(username, password);
             if (currentUser) {
                 req.session["currentUser"] = currentUser;
+                globalCurrentUser = currentUser;
                 res.json(currentUser);
             } else {
                 const userExists = await dao.findUserByUsername(username);
@@ -110,8 +111,12 @@ export default function UserRoutes(app) {
         req.session.destroy();
         res.sendStatus(200);
     };
-    const profile = async (req, res) => {    
-        const currentUser = req.session["currentUser"];
+    const profile = async (req, res) => {
+        let currentUser = globalCurrentUser;
+        currentUser = await dao.findUserById(currentUser
+            ? currentUser._id
+            : req.session["currentUser"]._id);
+        // const currentUser = req.session["currentUser"];
         if (!currentUser) {
             // req.session.destroy();
             return res.status(401).json({ message: "User not authenticated" });
