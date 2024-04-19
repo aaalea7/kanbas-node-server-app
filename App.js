@@ -28,7 +28,8 @@ app.use(
 const sessionOptions = {
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false,
+  // saveUninitialized: false,
+  saveUninitialized: true,
 };
 
 if (process.env.NODE_ENV !== "development") {
