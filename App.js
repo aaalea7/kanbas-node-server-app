@@ -4,10 +4,11 @@ import express from "express";
 import Hello from "./Hello.js";
 import Lab5 from "./Lab5.js";
 import CourseRoutes from "./Courses/routes.js";
-import ModuleRoutes from "./Kanbas/Modules/routes.js";
+import ModuleRoutes from "./Modules/routes.js";
 import AssignmentsRoutes from "./Assignments/routes.js";
+import QuizzesRoutes from "./Quizzes/routes.js";
 import cors from "cors";
-import SecurityController from "./Kanbas/SecurityController.js";
+import SecurityController from "./SecurityController.js";
 import UserRoutes from "./Users/routes.js";
 import mongoose from "mongoose";
 
@@ -44,6 +45,7 @@ if (process.env.NODE_ENV !== "development") {
 app.use(session(sessionOptions));
 app.use(express.json());
 
+QuizzesRoutes(app);
 AssignmentsRoutes(app);
 CourseRoutes(app);
 ModuleRoutes(app);
