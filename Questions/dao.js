@@ -1,30 +1,40 @@
-import model from "./model.js";
+import questionModel from "./model.js";
+import quizModel from "../Quizzes/model.js";
 
 export const createQuestion = (question) => {
-    return model.create(question);
+    return questionModel.create(question);
 };
 
-export const findAllQuestions = () => model.find();
+export const findAllQuestions = () => questionModel.find();
 
-export const findQuestionById = (questionId) =>
-    model.findOne({ _id: questionId });
+export const findQuestionById = async (questionId) => {
+    const question = await questionModel.findById(questionId);
+    return question;
+};
 
-export const findQuestionsForQuiz = (quizId) => model.find({ quiz: quizId });
+export const findQuizByQuizId = async (quizId) => {
+    const quiz = await quizModel.findById(quizId);
+    return quiz;
+};
 
-export const updateQuestion = (questionId, question) =>
-    model.updateOne({ _id: questionId }, { $set: question });
+export const findQuestionsForQuiz = async (quizTitle) => {
+    const questions = await questionModel.find({ quiz: quizTitle });
+    return questions;
+};
 
-export const deleteQuestion = (questionId) =>
-    model.deleteOne({ _id: questionId });
+export const updateQuestion = (questionId, question) => questionModel.updateOne({ _id: questionId }, { $set: question });
+export const deleteQuestion = (questionId) => questionModel.deleteOne({ _id: questionId });
+
+
 
 export const addChoice = (questionId, choice) =>
-    model.findById(questionId).then((question) => {
+    questionModel.findById(questionId).then((question) => {
         question.choices.push(choice);
         return question.save();
 });
 
 export const deleteChoice = async (questionId, choiceId) => {
-    model.findQuestionById(questionId).then((question) => {
+    questionModel.findQuestionById(questionId).then((question) => {
         question.choices = question.choices.filter(
         (choice) => choice._id != choiceId
         );
@@ -33,11 +43,11 @@ export const deleteChoice = async (questionId, choiceId) => {
 };
 
 export const getCorrectAnswerIndex = (questionId) =>
-    model.findById(questionId).then((question) => {
+    questionModel.findById(questionId).then((question) => {
         return question.getCorrectAnswerIndex();
 });
 
 export const checkAnswer = (questionId, answer) =>
-    model.findById(questionId).then((question) => {
+    questionModel.findById(questionId).then((question) => {
         return question.checkAnswer(answer);
 });
