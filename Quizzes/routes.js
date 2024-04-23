@@ -23,15 +23,15 @@ function QuizzesRoutes(app) {
             const quizData = {
                 ...req.body,
                 course: cid,
-                id: new Date().getTime().toString(),
+                // id: new Date().getTime().toString(),
             };
             const newQuiz = await dao.createQuiz(quizData);
             res.status(201).json(newQuiz);
-            } catch (error) {
-                console.error("Error creating quiz:", error);
-                res.status(500).send("Internal Server Error");
-            }
-        });
+        } catch (error) {
+            console.error("Error creating quiz:", error);
+            res.status(500).send("Internal Server Error");
+        }
+    });
 
     // find quizzes by course id
     // app.get("/api/courses/:cid/quizzes", async (req, res) => {
@@ -77,12 +77,12 @@ function QuizzesRoutes(app) {
     });
 
     // update quiz
-    app.put("/api/quizzes/:qid", async (req, res) => {
-        const { qid } = req.params;
+    app.put("/api/quizzes/:quizId", async (req, res) => {
+        const { quizId } = req.params;
         try {
-            const updatedQuiz = await dao.updateQuiz(qid, req.body);
+            const updatedQuiz = await dao.updateQuiz(quizId, req.body);
             if (updatedQuiz.modifiedCount > 0) {
-                res.json(await dao.findQuizById(id));
+                res.json(await dao.findQuizById(quizId));
             } else {
                 res.sendStatus(404);
             }
