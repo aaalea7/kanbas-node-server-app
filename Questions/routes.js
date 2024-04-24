@@ -39,7 +39,7 @@ export default function QuestionsRoutes(app) {
             const questions = await dao.findQuestionsForQuiz(quizId);
             console.log("Questions found:", questions);
             if (!questions || questions.length === 0) {
-                res.status(404).json({ message: 'No questions found for this quiz' });
+                // res.status(404).json({ message: 'No questions found for this quiz' });
                 return res.json([]);
             } else {
                 res.json(questions);
@@ -81,6 +81,21 @@ export default function QuestionsRoutes(app) {
         const status = await dao.deleteQuestion(questionId);
         res.json(status);
     };
+
+    const showQuestionType = async (req, res) => {
+        const { questionId } = req.params;
+        const type = await dao.showQuestionType(questionId);
+        console.log("Question type:", type);
+        res.json(type);
+    };
+
+    const updateQuestionType = async (req, res) => {
+        const { questionId } = req.params;
+        const { type } = req.body;
+        const updatedQuestion = await dao.updateQuestionType(questionId, type);
+        res.json(updatedQuestion);
+    };
+
     
     app.get("/api/questions", fetchAllQuestions);
     app.post("/api/quizzes/:quizId/questions", createQuestion);
@@ -88,4 +103,6 @@ export default function QuestionsRoutes(app) {
     app.get("/api/quizzes/:quizId/questions", findQuestionsForQuiz);
     app.put("/api/questions/:questionId", updateQuestion);
     app.delete("/api/questions/:questionId", deleteQuestion);
+    app.get("/api/questions/:questionId/type", showQuestionType);
+    app.put("/api/questions/:questionId/type", updateQuestionType);
 }

@@ -6,7 +6,8 @@ try {
     if (!answers) {
             throw new Error("No answer found");
     } else {
-        return res.json([]) || res.status(200).json(answers);
+        // res.status(200).json(answers);
+        return res.json([])
     }
     
     } catch (e) {

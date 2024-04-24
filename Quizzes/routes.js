@@ -42,7 +42,7 @@ function QuizzesRoutes(app) {
     // find quizzes by course
     app.get('/api/courses/:courseId/quizzes', async (req, res) => {
         const { courseId } = req.params;
-        console.log("Requested Course Id:", courseId);
+        // console.log("Requested Course Id:", courseId);
         try {
             // const course = await dao.findCourseByCId(cid);
             // if (!course) {
@@ -51,9 +51,9 @@ function QuizzesRoutes(app) {
             // }
             const quizzes = await dao.findQuizzesByCourse(courseId);
             if (!quizzes || quizzes.length === 0) {
-                console.log("No quizzes found for Course ID:", courseId);
-                return res.json([]) ||
-                res.status(404).json({ message: 'No quizzes found for this course' });
+                // console.log("No quizzes found for Course ID:", courseId);
+                return res.json([])
+                // res.status(404).json({ message: 'No quizzes found for this course' });
             } else { res.json(quizzes); }
         } catch (error) {
             console.error('API Error:', error);
@@ -76,7 +76,7 @@ function QuizzesRoutes(app) {
         const { quizId } = req.params;
         try {
             const quiz = await dao.findQuizById(quizId);
-            console.log("Quiz ID received:", quizId);
+            // console.log("Quiz ID received:", quizId);
             if (!quiz) {
                 res.status(404).send("Quiz not found");
             } else {
