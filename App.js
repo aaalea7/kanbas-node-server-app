@@ -8,6 +8,7 @@ import ModuleRoutes from "./Modules/routes.js";
 import AssignmentsRoutes from "./Assignments/routes.js";
 import QuizzesRoutes from "./Quizzes/routes.js";
 import QuestionsRoutes from "./Questions/routes.js";
+import AnswersRoutes from "./Answers/routes.js";
 import cors from "cors";
 import SecurityController from "./SecurityController.js";
 import UserRoutes from "./Users/routes.js";
@@ -46,6 +47,7 @@ if (process.env.NODE_ENV !== "development") {
 app.use(session(sessionOptions));
 app.use(express.json());
 
+AnswersRoutes(app);
 QuestionsRoutes(app);
 QuizzesRoutes(app);
 AssignmentsRoutes(app);

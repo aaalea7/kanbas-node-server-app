@@ -33,12 +33,12 @@ const quizSchema = new mongoose.Schema({
     oneQuestionAtATime: { type: Boolean, default: true },
     webcameRequired: { type: Boolean, default: false },
     lockQuestionAfterAnswering: { type: Boolean, default: false },
-    course: { type: String, required: true },
-    // course: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Course",
-    //     required: [true, "Please provide course"],
-    // },
+    course: {
+        // type: mongoose.Schema.Types.ObjectId,
+        type: String,
+        ref: "Courses",
+        required: [true, "Please provide course"],
+    },
 }, { collection: 'quizzes' });
 
 export default quizSchema;

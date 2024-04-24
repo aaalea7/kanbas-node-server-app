@@ -2,8 +2,8 @@ import courseModel from "./model.js";
 // import mongoose from "mongoose";
 
 export const findAllCourses = () => courseModel.find();
-// export const findCourseById = (id) => courseModel.findOne({ id: id });
-export const findCourseById = (id) => courseModel.findById(id);
+export const findCourseById = (courseId) => courseModel.findOne({ id: courseId });
+// export const findCourseById = (id) => courseModel.findById(id);
 // replace with if app crashed: 
 // export const findCourseById = async (id) => {
 //     try {
@@ -21,7 +21,7 @@ export const findCourseById = (id) => courseModel.findById(id);
 // };
 
 export const createCourse = (course) => { 
-    delete course._id; 
+    // delete course._id; 
     return courseModel.create(course); 
 };
 export const updateCourse = (id, course) => courseModel.updateOne({ _id: id }, { $set: course });

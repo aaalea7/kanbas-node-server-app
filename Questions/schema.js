@@ -6,11 +6,9 @@ const questionSchema = new mongoose.Schema(
         points: { type: Number, default: 1, required: true },
         questionText: { type: String, default: "" },
         quiz: {
-            // type: mongoose.Schema.Types.ObjectId,
-            type: String,
-            required: true,
-            // ref: "Quiz",
-            // required: [true, "Please provide quiz"],
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Quiz",
+            required: [true, "Please provide quiz"],
         },
     }, { collection: "questions" }
 );

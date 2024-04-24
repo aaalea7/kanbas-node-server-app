@@ -17,14 +17,20 @@ function QuizzesRoutes(app) {
     });
 
     // create quiz
-    app.post("/api/courses/:cid/quizzes", async(req, res) => {
-        const { cid } = req.params;
+    app.post("/api/courses/:courseId/quizzes", async(req, res) => {
+        const courseId = req.params.courseId;
         try {
-            const quizData = {
-                ...req.body,
-                course: cid,
-                // id: new Date().getTime().toString(),
-            };
+            // const course = await dao.findCourseByCId(cid);
+            // if (!course) {
+            //     return res.status(404).send("Course not found");
+            // }
+            const quizData = req.body;
+            // const quizData = {
+            //     ...req.body,
+            //     course: cid,
+            //     id: new Date().getTime().toString(),
+            // };
+            quizData.course = courseId;
             const newQuiz = await dao.createQuiz(quizData);
             res.status(201).json(newQuiz);
         } catch (error) {
@@ -33,42 +39,48 @@ function QuizzesRoutes(app) {
         }
     });
 
-    // find quizzes by course id
-    // app.get("/api/courses/:cid/quizzes", async (req, res) => {
-    //     const { cid } = req.params;
-    //     const quizzes = await dao.findQuizzesByCourse(cid);
-    //     res.json(quizzes);
-    // });
-    app.get('/api/courses/:cid/quizzes', async (req, res) => {
-        const cid = req.params.cid;
-        console.log("Requested Course ObjectId:", cid);
+    // find quizzes by course
+    app.get('/api/courses/:courseId/quizzes', async (req, res) => {
+        const { courseId } = req.params;
+        console.log("Requested Course Id:", courseId);
         try {
-            const course = await dao.findCourseByCId(cid);
-            if (!course) {
-                console.log("No course found for ObjectId:", cid);
-                return res.status(404).json({ message: 'Course not found' });
-            }
-            const quizzes = await dao.findQuizzesByCourse(course.id);
+            // const course = await dao.findCourseByCId(cid);
+            // if (!course) {
+            //     console.log("No course found for ObjectId:", cid);
+            //     return res.status(404).json({ message: 'Course not found' });
+            // }
+            const quizzes = await dao.findQuizzesByCourse(courseId);
             if (!quizzes || quizzes.length === 0) {
-                console.log("No quizzes found for Course ID:", course.id);
-                return res.status(404).json({ message: 'No quizzes found for this course' });
-            }
-            res.json(quizzes);
+                console.log("No quizzes found for Course ID:", courseId);
+                return res.json([]) ||
+                res.status(404).json({ message: 'No quizzes found for this course' });
+            } else { res.json(quizzes); }
         } catch (error) {
             console.error('API Error:', error);
             res.status(500).json({ message: 'Internal server error' });
         }
     });
+    // app.get("/api/courses/:courseId/quizzes", async (req, res) => {
+    //     const courseId = req.params.courseId;
+    //     const quizzes = await dao.findQuizzesByCourse(courseId);
+    //     console.log("Course ID received:", courseId);
+    //     if (!quizzes) {
+    //         res.status(404).send("No quizzes found");
+    //     } else {
+    //         res.json(quizzes);
+    //     }
+    // });
     
     // find quiz by id
     app.get("/api/quizzes/:quizId", async(req, res) => {
-        const quizId = req.params.quizId;
+        const { quizId } = req.params;
         try {
             const quiz = await dao.findQuizById(quizId);
+            console.log("Quiz ID received:", quizId);
             if (!quiz) {
                 res.status(404).send("Quiz not found");
             } else {
-                res.send(quiz);
+                res.json(quiz);
             }
         } catch (error) {
             console.error(error);
@@ -81,11 +93,12 @@ function QuizzesRoutes(app) {
         const { quizId } = req.params;
         try {
             const updatedQuiz = await dao.updateQuiz(quizId, req.body);
-            if (updatedQuiz.modifiedCount > 0) {
-                res.json(await dao.findQuizById(quizId));
-            } else {
-                res.sendStatus(404);
-            }
+            // if (updatedQuiz.modifiedCount > 0) {
+            //     res.json(await dao.findQuizById(quizId));
+            // } else {
+            //     res.sendStatus(404);
+            // }
+            res.json(updatedQuiz);
         } catch (error) {
             console.error("Error updating quiz:", error);
             res.status(500).send("Internal Server Error");
@@ -93,15 +106,16 @@ function QuizzesRoutes(app) {
     });
 
     // delete quiz
-    app.delete("/api/quizzes/:qid", async (req, res) => {
-        const { qid } = req.params;
+    app.delete("/api/quizzes/:quizId", async (req, res) => {
+        const { quizId } = req.params;
         try {
-            const result = await dao.deleteQuiz(qid);
-            if (result.deletedCount > 0) {
+            const status = await dao.deleteQuiz(quizId);
+            if (status.deletedCount > 0) {
                 res.sendStatus(200);
             } else {
                 res.sendStatus(404);
             }
+            res.json(status);
         } catch (error) {
             console.error("Error deleting quiz:", error);
             res.status(500).send("Internal Server Error");

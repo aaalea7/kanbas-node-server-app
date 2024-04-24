@@ -34,32 +34,32 @@ function AssignmentsRoutes(app) {
     });
 
     // find assignment by course id
-    // app.get("/api/courses/:cid/assignments", async (req, res) => {
-    //     const { cid } = req.params;
-    //     const assignments = await dao.findAssignmentsByCourse(cid);
-    //     res.json(assignments);
-    // });
-    app.get('/api/courses/:cid/assignments', async (req, res) => {
-        const cid = req.params.cid;
-        console.log("Requested Course ObjectId:", cid);
-        try {
-            const course = await dao.findCourseByCId(cid);
-            if (!course) {
-                console.log("No course found for ObjectId:", cid);
-                return res.status(404).json({ message: 'Course not found' });
-            }
-            const assignments = await dao.findAssignmentsByCourse(course.id);
-            if (!assignments || assignments.length === 0) {
-                console.log("No assignments found for Course ID:", course.id);
-                return res.status(404).json({ message: 'No assignments found for this course' });
-            }
-    
-            res.json(assignments);
-        } catch (error) {
-            console.error('API Error:', error);
-            res.status(500).json({ message: 'Internal server error' });
-        }
+    app.get("/api/courses/:cid/assignments", async (req, res) => {
+        const { cid } = req.params;
+        const assignments = await dao.findAssignmentsByCourse(cid);
+        res.json(assignments);
     });
+    // app.get('/api/courses/:cid/assignments', async (req, res) => {
+    //     const cid = req.params.cid;
+    //     console.log("Requested Course ObjectId:", cid);
+    //     try {
+    //         const course = await dao.findCourseByCId(cid);
+    //         if (!course) {
+    //             console.log("No course found for ObjectId:", cid);
+    //             return res.status(404).json({ message: 'Course not found' });
+    //         }
+    //         const assignments = await dao.findAssignmentsByCourse(course.id);
+    //         if (!assignments || assignments.length === 0) {
+    //             console.log("No assignments found for Course ID:", course.id);
+    //             return res.status(404).json({ message: 'No assignments found for this course' });
+    //         }
+    
+    //         res.json(assignments);
+    //     } catch (error) {
+    //         console.error('API Error:', error);
+    //         res.status(500).json({ message: 'Internal server error' });
+    //     }
+    // });
     
     // update assignment
     app.put("/api/assignments/:aid", async (req, res) => {

@@ -27,22 +27,24 @@ export default function QuestionsRoutes(app) {
 
     // find questions by quiz id
     const findQuestionsForQuiz = async (req, res) => {
-        const quizId = req.params.quizId;
+        const { quizId } = req.params;
         console.log("Requested Quiz ID:", quizId);
         try {
-            const quiz = await dao.findQuizByQuizId(quizId);
-            console.log("Quiz found:", quizId);
-            if (!quiz) {
-                console.log("No quiz found for Quiz ID:", quizId);
-                return res.status(404).json({ message: 'Quiz not found' });
-            }
-            const questions = await dao.findQuestionsForQuiz(quiz.title);
-            console.log("quiz title:", quiz.title);
+            // const quiz = await dao.findQuizByQuizId(quizId);
+            // console.log("Quiz found:", quizId);
+            // if (!quiz) {
+            //     console.log("No quiz found for Quiz ID:", quizId);
+            //     return res.status(404).json({ message: 'Quiz not found' });
+            // }
+            const questions = await dao.findQuestionsForQuiz(quizId);
+            console.log("Questions found:", questions);
             if (!questions || questions.length === 0) {
-                console.log("No questions found for Quiz Title:", quiz.title);
-                return res.status(404).json({ message: 'No questions found for this quiz' });
+                res.status(404).json({ message: 'No questions found for this quiz' });
+                return res.json([]);
+            } else {
+                res.json(questions);
             }
-            res.json(questions);
+            
         } catch (error) {
             console.error('API Error:', error);
             res.status(500).json({ message: 'Internal server error' });
@@ -53,6 +55,7 @@ export default function QuestionsRoutes(app) {
     const findQuestionById = async (req, res) => {
         const questionId = req.params.questionId;
         const question = await dao.findQuestionById(questionId);
+        // console.log("Question found:", question);
         if (!question) {
             res.status(404).send("Question not found");
         } else {
