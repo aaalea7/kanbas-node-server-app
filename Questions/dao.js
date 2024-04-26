@@ -15,7 +15,7 @@ export const findQuestionById = (questionId) => questionModel.findById(questionI
 
 export const findQuestionsForQuiz = (quizId) => questionModel.find({ quiz: quizId });
 
-export const updateQuestion = (questionId, question) => questionModel.updateOne({ _id: questionId }, { $set: question });
+export const updateQuestion = (questionId, question, questionType) => questionModel.updateOne({ _id: questionId }, { $set: question }, { $set: questionType });
 export const deleteQuestion = (questionId) => questionModel.deleteOne({ _id: questionId });
 
 export const showQuestionType = (questionId) => questionModel.findById(questionId, 'type');

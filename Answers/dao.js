@@ -8,7 +8,7 @@ export const createAnswer = (answer) => {
     return answerModel.create(answer);
 };
 
-export const findAnswersForQuestion = (questionId) => answerModel.find({ question: questionId });
+// export const findAnswersForQuestion = (questionId) => answerModel.find({ question: questionId });
 // export const findAnswersForQuestion = (questionId) => answerModel.findById(questionId);
 
 export const updateAnswer = (answerId, answer) => {
@@ -19,29 +19,18 @@ export const updateAnswer = (answerId, answer) => {
     );
 };
 
-export const updateAnswers = async (answers) => {
-    try {
-        const updatedAnswers = await Promise.all(
-            answers.map(async (answer) => {
-                const updatedAnswer = await answerModel.findOneAndUpdate(
-                    { _id: answer._id },
-                    { $set: answer },
-                    { new: true, runValidators: true }
-                );
-                return updatedAnswer;
-            })
-        );
-        return updatedAnswers;
-    } catch (error) {
-        console.error('Failed to update answers:', error);
-        throw error;
-    }
-};
-
 export const deleteAnswer = (answerId) => answerModel.deleteOne({ _id: answerId });
 
 // export const deleteAllAnswers = () => answerModel.deleteMany({});
 export const deleteAllAnswers = () => {
     console.log("Deleting all answers from the database");
     return answerModel.deleteMany({});
+};
+
+export const findAnswersForQuestion = (questionId, type) => {
+    const query = { question: questionId };
+    if (type) {
+        query.type = type;
+    }
+    return answerModel.find(query);
 };

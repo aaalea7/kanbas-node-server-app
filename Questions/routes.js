@@ -68,7 +68,7 @@ export default function QuestionsRoutes(app) {
         const { questionId } = req.params;
         const question = req.body;
         try {
-            const updatedQuestion = await dao.updateQuestion(questionId, question);
+            const updatedQuestion = await dao.updateQuestion(questionId, question, question.type);
             res.json(updatedQuestion);
         } catch (err) {
             res.sendStatus(500);

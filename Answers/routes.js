@@ -18,8 +18,9 @@ try {
 
 const findAnswersForQuestion = async (req, res) => {
     const { questionId } = req.params;
+    const { type } = req.query;
     // console.log("Requested Question ID:", questionId);
-    const answers = await dao.findAnswersForQuestion(questionId);
+    const answers = await dao.findAnswersForQuestion(questionId, type);
     if (!answers) {
         res.status(404).send("No answers found");
         return res.json([]);
@@ -27,12 +28,13 @@ const findAnswersForQuestion = async (req, res) => {
         res.json(answers);
     }
 };
+  
 
 const createAnswer = async (req, res) => {
     const { questionId } = req.params;
-    const answerData = req.body;
+    const answerData = { ...req.body, question: questionId };
     try {
-        answerData.question = questionId;
+        // answerData.question = questionId;
         const answer = await dao.createAnswer(answerData);
         res.json(answer);
     } catch (err) {
@@ -52,10 +54,15 @@ const updateAnswer = async (req, res) => {
         res.sendStatus(500);
     }
 };
+
 const updateAnswers = async (req, res) => {
+    const answers = req.body;
     try {
-        let answers = await dao.findAllAnswers();
-        const updatedAnswers = await dao.updateAnswers(answers);
+        const updatedAnswers = await Promise.all(
+            answers.map(answer =>
+                dao.updateAnswer(answer._id, answer)
+            )
+        );
         res.json(updatedAnswers);
     } catch (error) {
         console.error('Failed to update answers:', error);
@@ -71,11 +78,14 @@ const deleteAnswer = async (req, res) => {
 
 const deleteAllAnswers = async (req, res) => {
     try {
-        const result = await dao.deleteAllAnswers();
+        const answers = req.body;
+        const updatedAnswers = await dao.deleteAllAnswers(answers);
+        res.json(updatedAnswers);
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: "No answers found to delete" });
+        } else {
+            res.status(200).json({ message: "All answers deleted successfully", details: result });
         }
-        res.status(200).json({ message: "All answers deleted successfully", details: result });
     } catch (error) {
         console.error("Failed to delete answers:", error);
         res.status(500).send("Failed to delete answers.");
@@ -87,7 +97,7 @@ export default function AnswersRoutes(app) {
     app.get("/api/questions/:questionId/answers", findAnswersForQuestion);
     app.post("/api/questions/:questionId/answers", createAnswer);
     app.put("/api/answers/:answerId", updateAnswer);
-    app.put("/api/answers", updateAnswers);
+    app.put("/api/answers/answerList", updateAnswers);
     app.delete("/api/answers/:answerId", deleteAnswer);
     app.delete("/api/answers", deleteAllAnswers);
 }

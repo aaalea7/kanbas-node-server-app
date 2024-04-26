@@ -9,6 +9,16 @@ const answerSchema = new mongoose.Schema(
             ref: "Question",
             required: [true, "Please provide question"],
         },
+        // type: {
+        //     type: String,
+        //     enum: ["MULTIPLE_CHOICE", "TRUE_FALSE", "FILLIN_THE_BLANK"],
+        //     required: true
+        // },
+        type: {
+            type: String,
+            ref: "Question.type",
+            required: true
+        },
     },
     { collection: "answers" }
 );

@@ -17,25 +17,34 @@ function QuizzesRoutes(app) {
     });
 
     // create quiz
+    // app.post("/api/courses/:courseId/quizzes", async(req, res) => {
+    //     const courseId = req.params.courseId;
+    //     try {
+    //         const quizData = {
+    //             ...req.body,
+    //             course: cid,
+    //             id: new Date().getTime().toString(),
+    //         };
+    //         quizData.course = courseId;
+    //         const newQuiz = await dao.createQuiz(quizData);
+    //         res.status(201).json(newQuiz);
+    //     } catch (error) {
+    //         console.error("Error creating quiz:", error);
+    //         res.status(500).send("Internal Server Error");
+    //     }
+    // });
+
+    // create quiz
     app.post("/api/courses/:courseId/quizzes", async(req, res) => {
-        const courseId = req.params.courseId;
+        const { courseId } = req.params;
+        const quizData = req.body;
         try {
-            // const course = await dao.findCourseByCId(cid);
-            // if (!course) {
-            //     return res.status(404).send("Course not found");
-            // }
-            const quizData = req.body;
-            // const quizData = {
-            //     ...req.body,
-            //     course: cid,
-            //     id: new Date().getTime().toString(),
-            // };
             quizData.course = courseId;
-            const newQuiz = await dao.createQuiz(quizData);
-            res.status(201).json(newQuiz);
-        } catch (error) {
-            console.error("Error creating quiz:", error);
-            res.status(500).send("Internal Server Error");
+            const quiz = await dao.createQuiz(quizData);
+            res.json(quiz);
+        } catch (err) {
+            console.log(err.message);
+            res.sendStatus(500);
         }
     });
 
@@ -93,12 +102,11 @@ function QuizzesRoutes(app) {
         const { quizId } = req.params;
         try {
             const updatedQuiz = await dao.updateQuiz(quizId, req.body);
-            // if (updatedQuiz.modifiedCount > 0) {
-            //     res.json(await dao.findQuizById(quizId));
-            // } else {
-            //     res.sendStatus(404);
-            // }
-            res.json(updatedQuiz);
+            if (!updatedQuiz) {
+                res.status(404).send("No quiz found with given ID");
+            } else {
+                res.json(updatedQuiz);
+            }
         } catch (error) {
             console.error("Error updating quiz:", error);
             res.status(500).send("Internal Server Error");
@@ -115,7 +123,7 @@ function QuizzesRoutes(app) {
             } else {
                 res.sendStatus(404);
             }
-            res.json(status);
+            // res.json(status);
         } catch (error) {
             console.error("Error deleting quiz:", error);
             res.status(500).send("Internal Server Error");
